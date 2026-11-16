@@ -28,24 +28,4 @@ const createCategoryValidation = async (req, res, next) => {
   }
 };
 
-const updateCategoryValidation = async (req, res, next) => {
-  try {
-    const schema = Joi.object({
-      name: Joi.string().min(2).max(50).trim().strict(),
-
-      description: Joi.string().allow('', null).trim().strict(),
-
-      image: Joi.string().uri().allow('', null),
-    }).min(1);
-
-    await schema.validateAsync(req.body, { abortEarly: false });
-    next();
-  } catch (error) {
-    const errorMessage = error.details ? error.details.map((detail) => detail.message).join(', ') : error.message;
-
-    next(new ApiError(error.isJoi ? 400 : 500, errorMessage));
-  }
-};
-
-export { createCategoryValidation, updateCategoryValidation };
-//
+export { createCategoryValidation };
