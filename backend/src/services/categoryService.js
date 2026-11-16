@@ -1,6 +1,6 @@
 import Category from '../models/categoriesModel.js';
-import ApiError from '../../utils/ApiError.js';
-import redis from '../../config/redis.js';
+import ApiError from '../utils/ApiError.js';
+import redis from '../config/redis.js';
 
 const getAllCategories = async () => {
   const cacheKey = 'categories:user:all';
@@ -48,7 +48,7 @@ const getCategoryById = async (id) => {
   let category;
 
   try {
-    category = await Category.findOne({_id: id,status: 'active',}).lean();
+    category = await Category.findOne({ _id: id, status: 'active' }).lean();
   } catch (error) {
     if (error.name === 'CastError') {
       throw new ApiError(400, 'Invalid category ID');

@@ -1,4 +1,4 @@
-import Category from '../models/categoriesModel.js';
+import Category from '../../models/categoriesModel.js';
 import ApiError from '../../utils/ApiError.js';
 import redis from '../../config/redis.js';
 
