@@ -51,15 +51,80 @@ const createFavoriteService = async (userId, roomId) => {
   return favorite;
 };
 
-const getFavoriteService = async () => {};
+const getFavoriteService = async (userId) => {
+  const cacheKey = `favorites:${userId}:list`;
 
-const deleteFavoriteService = async () => {};
+  try {
+    const cachedFavorites = await redis.get(cacheKey);
 
-const checkFavoriteService = async () => {};
+    if (cachedFavorites) {
+      return JSON.parse(cachedFavorites);
+    }
+  } catch (error) {
+    console.error('Redis get error:', error.message);
+  }
 
-export {
-  createFavoriteService,
-  getFavoriteService,
-  deleteFavoriteService,
-  checkFavoriteService,
+  let favorites;
+
+  try {
+    favorites = await Favorite.find({ userId }).populate({ path: 'roomId', match: { deletedAt: null } }).sort({ createdAt: -1 }).lean();
+
+    favorites = favorites.filter((favorite) => favorite.roomId);
+  } catch (error) {
+    throw new ApiError(500, 'Không thể lấy danh sách yêu thích');
+  }
+
+  try {
+    await redis.set(cacheKey, JSON.stringify(favorites), 'EX', 300);
+  } catch (error) {
+    console.error('Redis set error:', error.message);
+  }
+
+  return favorites;
 };
+
+const deleteFavoriteService = async (userId, roomId) => {
+  let favorite;
+
+  try {
+    favorite = await Favorite.findOneAndDelete({ userId, roomId });
+  } catch (error) {
+    if (error.name === 'CastError') {
+      throw new ApiError(400, 'ID phòng trọ không hợp lệ');
+    }
+
+    throw new ApiError(500, 'Không thể xóa phòng trọ khỏi danh sách yêu thích');
+  }
+
+  if (!favorite) {
+    throw new ApiError(404, 'Phòng trọ không có trong danh sách yêu thích');
+  }
+
+  try {
+    const keys = await redis.keys(`favorites:${userId}:*`);
+
+    if (keys.length > 0) {
+      await redis.del(...keys);
+    }
+  } catch (error) {
+    console.error('Redis del error:', error.message);
+  }
+
+  return favorite;
+};
+
+const checkFavoriteService = async (userId, roomId) => {
+  try {
+    const favorite = await Favorite.exists({ userId, roomId });
+
+    return !!favorite;
+  } catch (error) {
+    if (error.name === 'CastError') {
+      throw new ApiError(400, 'ID phòng trọ không hợp lệ');
+    }
+
+    throw new ApiError(500, 'Không thể kiểm tra trạng thái yêu thích');
+  }
+};
+
+export { createFavoriteService, getFavoriteService, deleteFavoriteService, checkFavoriteService };
