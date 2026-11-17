@@ -3,12 +3,14 @@ import authRoutes from './authRoutes.js';
 import categoryRoutes from './categoryRoutes.js';
 import roomRoutes from './roomRoutes.js';
 import adminCategoryRoutes from './admin/adminCategoryRoutes.js';
+import favoriteRoutes from './favoriteRoutes.js';
 
 const router = express.Router();
 
 router.use('/auth', authRoutes);
 router.use('/categories', categoryRoutes);
 router.use('/rooms', roomRoutes);
+router.use('/favorites', favoriteRoutes);
 
 // admin
 router.use('/admin/categories', adminCategoryRoutes);
