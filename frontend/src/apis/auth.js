@@ -1,52 +1,80 @@
-import instance from '../utils/http';
+import instance from "../utils/http";
 
+// Đăng ký tài khoản
 const registerAPI = (userName, email, password) => {
-  return instance.post('/auth/register', {
+  const URL_API = "auth/register";
+  const data = {
     userName,
     email,
     password,
-  });
+  };
+
+  return instance.post(URL_API, data);
 };
 
+// Đăng nhập
 const loginAPI = (email, password) => {
-  return instance.post('/auth/login', {
+  const URL_API = "auth/login";
+  const data = {
     email,
     password,
-  });
+  };
+
+  return instance.post(URL_API, data);
 };
 
+// Đăng xuất
 const logoutAPI = () => {
-  return instance.post('/auth/logout');
+  const URL_API = "auth/logout";
+  return instance.post(URL_API);
 };
 
+// Làm mới Access Token
 const refreshTokenAPI = (refreshToken) => {
-  return instance.post('/auth/refresh-token', {
+  const URL_API = "auth/refresh-token";
+  const data = {
     refreshToken,
-  });
+  };
+
+  return instance.post(URL_API, data);
 };
 
+// Lấy thông tin người dùng hiện tại
 const authUserAPI = () => {
-  return instance.get('/auth/me');
+  const URL_API = "auth/me";
+  return instance.get(URL_API);
 };
 
+// Đổi mật khẩu
 const changePasswordAPI = (oldPassword, newPassword) => {
-  return instance.post('/auth/change-password', {
+  const URL_API = "auth/change-password";
+  const data = {
     oldPassword,
     newPassword,
-  });
+  };
+
+  return instance.post(URL_API, data);
 };
 
+// Quên mật khẩu
 const forgotPasswordAPI = (email) => {
-  return instance.post('/auth/forgot-password', {
+  const URL_API = "auth/forgot-password";
+  const data = {
     email,
-  });
+  };
+
+  return instance.post(URL_API, data);
 };
 
+// Đặt lại mật khẩu
 const resetPasswordAPI = (token, password) => {
-  return instance.post('/auth/reset-password', {
+  const URL_API = "auth/reset-password";
+  const data = {
     token,
     password,
-  });
+  };
+
+  return instance.post(URL_API, data);
 };
 
 export {
