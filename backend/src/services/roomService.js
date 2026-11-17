@@ -3,7 +3,6 @@ import Category from '../models/categoriesModel.js';
 import ApiError from '../utils/ApiError.js';
 import redis from '../config/redis.js';
 
-// Helper: Xóa cache liên quan đến phòng
 const clearRoomCache = async (id = null) => {
   try {
     if (id) await redis.del(`rooms:detail:${id}`);
@@ -14,7 +13,6 @@ const clearRoomCache = async (id = null) => {
   }
 };
 
-// Helper: Tìm phòng theo ID (chưa bị xóa mềm) + kiểm tra quyền sở hữu
 const findRoomAndCheckOwner = async (id, ownerId) => {
   let room;
   try {
@@ -33,7 +31,6 @@ const findRoomAndCheckOwner = async (id, ownerId) => {
   return room;
 };
 
-// Helper: Kiểm tra danh mục có tồn tại và đang active
 const validateCategory = async (categoryId) => {
   let category;
   try {
@@ -47,14 +44,11 @@ const validateCategory = async (categoryId) => {
   return category;
 };
 
-// Lấy chi tiết phòng hoặc danh sách phòng (tìm kiếm, lọc, phân trang)
 const getRoomService = async (id = null, query = {}) => {
   if (typeof id === 'object' && id !== null) {
     query = id;
     id = null;
   }
-
-  // XEM CHI TIẾT PHÒNG THEO ID
   if (id) {
     const cacheKey = `rooms:detail:${id}`;
 
@@ -87,40 +81,45 @@ const getRoomService = async (id = null, query = {}) => {
     return room;
   }
 
-  // TÌM KIẾM, LỌC VÀ PHÂN TRANG DANH SÁCH PHÒNG
   const { keyword, categoryId, minPrice, maxPrice, minArea, maxArea, page = 1, limit = 10, sort = 'newest' } = query;
 
-  const pageNum = Math.max(1, parseInt(page, 10));
-  const limitNum = Math.max(1, parseInt(limit, 10));
-  const skip = (pageNum - 1) * limitNum;
+  const pageNumber = Math.max(1, Number(page));
+  const pageSize = Math.max(1, Number(limit));
+  const skip = (pageNumber - 1) * pageSize;
 
   const filter = { deletedAt: null, status: 'available' };
 
-  if (categoryId) filter.categoryId = categoryId;
-
-  if (keyword && keyword.trim() !== '') {
-    const regex = new RegExp(keyword.trim(), 'i');
-    filter.$or = [{ title: regex }, { address: regex }];
+  if (categoryId) {
+    filter.categoryId = categoryId;
   }
 
-  if (minPrice !== undefined || maxPrice !== undefined) {
-    filter.price = {};
-    if (minPrice !== undefined && minPrice !== '') filter.price.$gte = Number(minPrice);
-    if (maxPrice !== undefined && maxPrice !== '') filter.price.$lte = Number(maxPrice);
+  if (keyword?.trim()) {
+    const searchRegex = new RegExp(keyword.trim(), 'i');
+    filter.$or = [{ title: searchRegex }, { address: searchRegex }];
   }
 
-  if (minArea !== undefined || maxArea !== undefined) {
-    filter.area = {};
-    if (minArea !== undefined && minArea !== '') filter.area.$gte = Number(minArea);
-    if (maxArea !== undefined && maxArea !== '') filter.area.$lte = Number(maxArea);
+  if (minPrice !== undefined && minPrice !== '') {
+    filter.price = { ...filter.price, $gte: Number(minPrice) };
+  }
+  if (maxPrice !== undefined && maxPrice !== '') {
+    filter.price = { ...filter.price, $lte: Number(maxPrice) };
   }
 
-  let sortOption = { createdAt: -1 };
-  if (sort === 'price_asc') sortOption = { price: 1 };
-  else if (sort === 'price_desc') sortOption = { price: -1 };
+  if (minArea !== undefined && minArea !== '') {
+    filter.area = { ...filter.area, $gte: Number(minArea) };
+  }
+  if (maxArea !== undefined && maxArea !== '') {
+    filter.area = { ...filter.area, $lte: Number(maxArea) };
+  }
 
-  const cacheKey = `rooms:search:${JSON.stringify({ filter, pageNum, limitNum, sortOption })}`;
+  const sortMap = {
+    newest: { createdAt: -1 },
+    price_asc: { price: 1 },
+    price_desc: { price: -1 },
+  };
+  const sortBy = sortMap[sort] || sortMap.newest;
 
+  const cacheKey = `rooms:search:${JSON.stringify(query)}`;
   try {
     const cached = await redis.get(cacheKey);
     if (cached) return JSON.parse(cached);
@@ -135,9 +134,9 @@ const getRoomService = async (id = null, query = {}) => {
       Room.find(filter)
         .populate('ownerId', 'userName email phone avatar')
         .populate('categoryId', 'name')
-        .sort(sortOption)
+        .sort(sortBy)
         .skip(skip)
-        .limit(limitNum)
+        .limit(pageSize)
         .lean(),
     ]);
   } catch (error) {
@@ -147,10 +146,10 @@ const getRoomService = async (id = null, query = {}) => {
   const result = {
     rooms,
     pagination: {
-      currentPage: pageNum,
-      limit: limitNum,
+      currentPage: pageNumber,
+      limit: pageSize,
       totalRooms,
-      totalPages: Math.ceil(totalRooms / limitNum) || 1,
+      totalPages: Math.ceil(totalRooms / pageSize) || 1,
     },
   };
 
@@ -163,7 +162,6 @@ const getRoomService = async (id = null, query = {}) => {
   return result;
 };
 
-// Chủ trọ đăng tin phòng mới
 const createRoomService = async (ownerId, data) => {
   const { categoryId, title, description, price, area, address, images, amenities } = data;
 
@@ -191,7 +189,6 @@ const createRoomService = async (ownerId, data) => {
   return newRoom;
 };
 
-// Chủ trọ chỉnh sửa thông tin phòng
 const updateRoomService = async (id, ownerId, data) => {
   const room = await findRoomAndCheckOwner(id, ownerId);
 
@@ -212,7 +209,6 @@ const updateRoomService = async (id, ownerId, data) => {
   return room;
 };
 
-// Xóa mềm phòng trọ
 const deleteRoomService = async (id, ownerId) => {
   const room = await findRoomAndCheckOwner(id, ownerId);
 
