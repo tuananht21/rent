@@ -5,19 +5,19 @@ const createMessageValidation = async (req, res, next) => {
   try {
     const schema = Joi.object({
       chatId: Joi.string().hex().length(24).required().messages({
-        'string.hex': 'Chat ID must be a valid ObjectId.',
-        'string.length': 'Chat ID must contain 24 characters.',
-        'any.required': 'Chat ID is required.',
+        'string.hex': 'ID cuộc trò chuyện phải là một ObjectId hợp lệ.',
+        'string.length': 'ID cuộc trò chuyện phải có đúng 24 ký tự.',
+        'any.required': 'ID cuộc trò chuyện là trường bắt buộc.',
       }),
 
       content: Joi.string().required().trim().strict().messages({
-        'string.base': 'Message content must be a string.',
-        'string.empty': 'Message content is required.',
-        'any.required': 'Message content is required.',
+        'string.base': 'Nội dung tin nhắn phải là một chuỗi văn bản.',
+        'string.empty': 'Nội dung tin nhắn không được để trống.',
+        'any.required': 'Nội dung tin nhắn là trường bắt buộc.',
       }),
 
       type: Joi.string().valid('text', 'image', 'file').default('text').messages({
-        'any.only': 'Message type must be text, image or file.',
+        'any.only': 'Loại tin nhắn phải là text, image hoặc file.',
       }),
     });
 
@@ -31,4 +31,3 @@ const createMessageValidation = async (req, res, next) => {
 };
 
 export { createMessageValidation };
-//

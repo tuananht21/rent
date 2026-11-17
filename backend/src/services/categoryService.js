@@ -2,7 +2,7 @@ import Category from '../models/categoriesModel.js';
 import ApiError from '../utils/ApiError.js';
 import redis from '../config/redis.js';
 
-const getCategoryService = async (id = null) => {
+const getCategoryService = async (id) => {
   const cacheKey = id ? `categories:user:${id}` : 'categories:user:all';
 
   try {

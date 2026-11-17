@@ -5,17 +5,20 @@ const createCategoryValidation = async (req, res, next) => {
   try {
     const schema = Joi.object({
       name: Joi.string().min(2).max(50).required().trim().strict().messages({
-        'string.base': 'Category name must be a string.',
-        'string.empty': 'Category name is required.',
-        'string.min': 'Category name must be at least {#limit} characters.',
-        'string.max': 'Category name cannot exceed {#limit} characters.',
-        'any.required': 'Category name is required.',
+        'string.base': 'Tên danh mục phải là một chuỗi văn bản.',
+        'string.empty': 'Tên danh mục không được để trống.',
+        'string.min': 'Tên danh mục phải có ít nhất {#limit} ký tự.',
+        'string.max': 'Tên danh mục không được vượt quá {#limit} ký tự.',
+        'any.required': 'Tên danh mục là trường bắt buộc.',
       }),
 
-      description: Joi.string().allow('', null).trim().strict(),
+      description: Joi.string().allow('', null).trim().strict().messages({
+        'string.base': 'Mô tả danh mục phải là một chuỗi văn bản.',
+      }),
 
       image: Joi.string().uri().allow('', null).messages({
-        'string.uri': 'Image must be a valid URL.',
+        'string.base': 'Hình ảnh phải là một chuỗi văn bản.',
+        'string.uri': 'Đường dẫn hình ảnh không đúng định dạng URL.',
       }),
     });
 

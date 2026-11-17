@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import roomsMigration from '../migrations/roomsMigration.js';
+import roomsMigration from '../database/migrations/roomsMigration.js';
 
 const roomSchema = new mongoose.Schema(roomsMigration, {
   timestamps: true,

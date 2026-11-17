@@ -1,13 +1,13 @@
 import mongoose from 'mongoose';
 
 const usersMigration = {
-  
-  userName: {
+
+  userName: { 
     type: String,
     required: [true, 'Username is required'],
     trim: true,
-    minlength: [3, 'Username must be at least 3 characters'],
-    maxlength: [50, 'Username must not exceed 50 characters'],
+    min: [3, 'Username must be at least 3 characters'],
+    max: [50, 'Username must not exceed 50 characters'],
   },
 
   email: {
@@ -22,14 +22,14 @@ const usersMigration = {
   phone: {
     type: String,
     default: null,
-    trim: true,
-    match: [/^(0|\+84)[0-9]{9}$/, 'Invalid Vietnamese phone number'],
+    min: [10, 'Phone number must be at least 10 characters long'],
+    max: [10, 'Phone number must be at most 10 characters long'],
   },
 
   password: {
     type: String,
     required: [true, 'Password is required'],
-    minlength: [6, 'Password must be at least 6 characters'],
+    min: [6, 'Password must be at least 6 characters'],
   },
 
   avatar: {
@@ -38,8 +38,20 @@ const usersMigration = {
   },
 
   role: {
-    type: Boolean,
-    default: 0, // 0 user 1 admin
+    type: String,
+    enum: ['user', 'landlord', 'admin'],
+    default: 'user',
+  },
+
+  googleId: {
+    type: String,
+    default: null,
+  },
+
+  provider: {
+    type: String,
+    enum: ['local', 'google'],
+    default: 'local',
   },
 
   isEmailVerified: {
@@ -47,10 +59,9 @@ const usersMigration = {
     default: false,
   },
 
-  plan: {
-    // type: mongoose.Schema.Types.ObjectId,
-    // ref: 'PricingPlan',
-    default: null,
+  isOnline: {
+    type: Boolean,
+    default: false,
   },
 
   status: {
@@ -59,18 +70,8 @@ const usersMigration = {
     default: 'active',
   },
 
-  isOnline: {
-    type: Boolean,
-    default: false,
-  },
-
   lastLoginAt: {
     type: Date,
-    default: null,
-  },
-
-  googleId: {
-    type: String,
     default: null,
   },
 
