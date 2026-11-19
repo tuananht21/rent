@@ -1,7 +1,13 @@
 import instance from "../utils/http";
 
-const createBookingAPI = (data) => {
+const createBookingAPI = (roomId, bookingDate, note) => {
   const URL_API = "bookings";
+  const data = {
+    roomId,
+    bookingDate,
+    note,
+  };
+
   return instance.post(URL_API, data);
 };
 

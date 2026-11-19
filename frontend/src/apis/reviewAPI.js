@@ -1,12 +1,23 @@
 import instance from "../utils/http";
 
-const createReviewAPI = (data) => {
+const createReviewAPI = (roomId, rating, comment) => {
   const URL_API = "reviews";
+  const data = {
+    roomId,
+    rating,
+    comment,
+  };
+
   return instance.post(URL_API, data);
 };
 
-const updateReviewAPI = (reviewId, data) => {
+const updateReviewAPI = (reviewId, rating, comment) => {
   const URL_API = `reviews/${reviewId}`;
+  const data = {
+    rating,
+    comment,
+  };
+
   return instance.patch(URL_API, data);
 };
 
