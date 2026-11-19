@@ -40,6 +40,14 @@ const authUserAPI = () => {
   return instance.get(URL_API);
 };
 
+const oAuthGoogleAPI = (token = "") => {
+  const URL_API = `auth/google`;
+  const data = {
+    token,
+  };
+  return instance.post(URL_API, data);
+};
+
 const changePasswordAPI = (oldPassword, newPassword) => {
   const URL_API = "auth/change-password";
   const data = {
@@ -75,6 +83,7 @@ export {
   logoutAPI,
   refreshTokenAPI,
   authUserAPI,
+  oAuthGoogleAPI,
   changePasswordAPI,
   forgotPasswordAPI,
   resetPasswordAPI,
