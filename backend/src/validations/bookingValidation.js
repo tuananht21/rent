@@ -38,7 +38,7 @@ const updateBookingValidation = async (req, res, next) => {
 
       note: Joi.string().max(500).allow('', null).trim().strict(),
 
-      status: Joi.string().valid('confirmed', 'cancelled', 'completed'),
+      status: Joi.string().valid('confirmed', 'rejected', 'cancelled', 'completed'),
     }).min(1);
 
     await schema.validateAsync(req.body, { abortEarly: false });
