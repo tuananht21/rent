@@ -5,6 +5,7 @@ import {
   logoutController,
   refreshTokenController,
   authUserController,
+  oAuthGoogleController,
   forgotPasswordController,
   resetPasswordController,
   changePasswordController,
@@ -29,6 +30,9 @@ authRoutes.route('/logout')
 
 authRoutes.route('/me')
   .get(authMiddleware, authUserController);
+
+authRoutes.route('/google')
+  .post(guestMiddleware, oAuthGoogleController);
 
 authRoutes.route('/forgot-password')
   .post(guestMiddleware, forgotPasswordController);
