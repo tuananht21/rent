@@ -1,52 +1,80 @@
-import instance from '../utils/http';
+import instance from "../utils/http";
 
 const registerAPI = (userName, email, password) => {
-  return instance.post('/auth/register', {
+  const URL_API = "auth/register";
+  const data = {
     userName,
     email,
     password,
-  });
+  };
+
+  return instance.post(URL_API, data);
 };
 
 const loginAPI = (email, password) => {
-  return instance.post('/auth/login', {
+  const URL_API = "auth/login";
+  const data = {
     email,
     password,
-  });
+  };
+
+  return instance.post(URL_API, data);
 };
 
 const logoutAPI = () => {
-  return instance.post('/auth/logout');
+  const URL_API = "auth/logout";
+  return instance.post(URL_API);
 };
 
 const refreshTokenAPI = (refreshToken) => {
-  return instance.post('/auth/refresh-token', {
+  const URL_API = "auth/refresh-token";
+  const data = {
     refreshToken,
-  });
+  };
+
+  return instance.post(URL_API, data);
 };
 
 const authUserAPI = () => {
-  return instance.get('/auth/me');
+  const URL_API = "auth/me";
+  return instance.get(URL_API);
+};
+
+const oAuthGoogleAPI = (token = "") => {
+  const URL_API = `auth/google`;
+  const data = {
+    token,
+  };
+  return instance.post(URL_API, data);
 };
 
 const changePasswordAPI = (oldPassword, newPassword) => {
-  return instance.post('/auth/change-password', {
+  const URL_API = "auth/change-password";
+  const data = {
     oldPassword,
     newPassword,
-  });
+  };
+
+  return instance.post(URL_API, data);
 };
 
 const forgotPasswordAPI = (email) => {
-  return instance.post('/auth/forgot-password', {
+  const URL_API = "auth/forgot-password";
+  const data = {
     email,
-  });
+  };
+
+  return instance.post(URL_API, data);
 };
 
 const resetPasswordAPI = (token, password) => {
-  return instance.post('/auth/reset-password', {
+  const URL_API = "auth/reset-password";
+  const data = {
     token,
     password,
-  });
+  };
+
+  return instance.post(URL_API, data);
 };
 
 export {
@@ -55,6 +83,7 @@ export {
   logoutAPI,
   refreshTokenAPI,
   authUserAPI,
+  oAuthGoogleAPI,
   changePasswordAPI,
   forgotPasswordAPI,
   resetPasswordAPI,

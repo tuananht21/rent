@@ -5,33 +5,33 @@ const registerValidation = async (req, res, next) => {
   try {
     const schema = Joi.object({
       userName: Joi.string().min(3).max(30).required().trim().strict().messages({
-        'string.base': 'Username must be a string.',
-        'string.empty': 'Username is required.',
-        'string.min': 'Username must be at least {#limit} characters long.',
-        'string.max': 'Username cannot exceed {#limit} characters.',
-        'any.required': 'Username is required.',
+        'string.base': 'Tên người dùng phải là một chuỗi văn bản.',
+        'string.empty': 'Tên người dùng không được để trống.',
+        'string.min': 'Tên người dùng phải có ít nhất {#limit} ký tự.',
+        'string.max': 'Tên người dùng không được vượt quá {#limit} ký tự.',
+        'any.required': 'Tên người dùng là trường bắt buộc.',
       }),
 
       email: Joi.string().email().required().trim().strict().messages({
-        'string.base': 'Email must be a string.',
-        'string.empty': 'Email is required.',
-        'string.email': 'Email must be a valid email address.',
-        'any.required': 'Email is required.',
+        'string.base': 'Email phải là một chuỗi văn bản.',
+        'string.empty': 'Email không được để trống.',
+        'string.email': 'Email không đúng định dạng.',
+        'any.required': 'Email là trường bắt buộc.',
       }),
 
       password: Joi.string().min(8).max(50).required().strict().messages({
-        'string.base': 'Password must be a string.',
-        'string.empty': 'Password is required.',
-        'string.min': 'Password must be at least {#limit} characters long.',
-        'string.max': 'Password cannot exceed {#limit} characters.',
-        'any.required': 'Password is required.',
+        'string.base': 'Mật khẩu phải là một chuỗi văn bản.',
+        'string.empty': 'Mật khẩu không được để trống.',
+        'string.min': 'Mật khẩu phải có ít nhất {#limit} ký tự.',
+        'string.max': 'Mật khẩu không được vượt quá {#limit} ký tự.',
+        'any.required': 'Mật khẩu là trường bắt buộc.',
       }),
 
       confirmPassword: Joi.string().valid(Joi.ref('password')).required().strict().messages({
-        'string.base': 'Confirm password must be a string.',
-        'string.empty': 'Confirm password is required.',
-        'any.only': 'Confirm password does not match.',
-        'any.required': 'Confirm password is required.',
+        'string.base': 'Mật khẩu xác nhận phải là một chuỗi văn bản.',
+        'string.empty': 'Mật khẩu xác nhận không được để trống.',
+        'any.only': 'Mật khẩu xác nhận không khớp.',
+        'any.required': 'Mật khẩu xác nhận là trường bắt buộc.',
       }),
     });
 
@@ -48,16 +48,16 @@ const loginValidation = async (req, res, next) => {
   try {
     const schema = Joi.object({
       email: Joi.string().email().required().trim().strict().messages({
-        'string.base': 'Email must be a string.',
-        'string.empty': 'Email is required.',
-        'string.email': 'Email must be a valid email address.',
-        'any.required': 'Email is required.',
+        'string.base': 'Email phải là một chuỗi văn bản.',
+        'string.empty': 'Email không được để trống.',
+        'string.email': 'Email không đúng định dạng.',
+        'any.required': 'Email là trường bắt buộc.',
       }),
 
       password: Joi.string().required().strict().messages({
-        'string.base': 'Password must be a string.',
-        'string.empty': 'Password is required.',
-        'any.required': 'Password is required.',
+        'string.base': 'Mật khẩu phải là một chuỗi văn bản.',
+        'string.empty': 'Mật khẩu không được để trống.',
+        'any.required': 'Mật khẩu là trường bắt buộc.',
       }),
     });
 

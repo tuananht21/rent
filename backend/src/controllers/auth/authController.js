@@ -4,6 +4,7 @@ import {
   logoutService,
   refreshTokenService,
   authUserService,
+  oAuthGoogleService,
   changePasswordService,
   forgotPasswordService,
   resetPasswordService,
@@ -88,6 +89,22 @@ const authUserController = async (req, res, next) => {
   }
 };
 
+const oAuthGoogleController = async (req, res, next) => {
+  try {
+    const { token } = req.body;
+    if (!token) return next(new ApiError(400, 'Token không hợp lệ'));
+    const user = await oAuthGoogleService(token);
+    res.status(200).json({
+      statusCode: 200,
+      success: true,
+      data: user,
+      message: 'Đăng nhập thành công',
+    });
+  } catch (error) {
+    next(new ApiError(400, error.message || error));
+  }
+};
+
 const changePasswordController = async (req, res, next) => {
   try {
     const userId = req.user.id;
@@ -137,6 +154,7 @@ export {
   logoutController,
   refreshTokenController,
   authUserController,
+  oAuthGoogleController,
   changePasswordController,
   forgotPasswordController,
   resetPasswordController,

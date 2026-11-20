@@ -5,21 +5,22 @@ const createReviewValidation = async (req, res, next) => {
   try {
     const schema = Joi.object({
       roomId: Joi.string().hex().length(24).required().messages({
-        'string.hex': 'Room ID must be a valid ObjectId.',
-        'string.length': 'Room ID must contain 24 characters.',
-        'any.required': 'Room ID is required.',
+        'string.hex': 'ID phòng phải là một ObjectId hợp lệ.',
+        'string.length': 'ID phòng phải có đúng 24 ký tự.',
+        'any.required': 'ID phòng là trường bắt buộc.',
       }),
 
       rating: Joi.number().integer().min(1).max(5).required().messages({
-        'number.base': 'Rating must be a number.',
-        'number.integer': 'Rating must be an integer.',
-        'number.min': 'Rating must be at least {#limit}.',
-        'number.max': 'Rating cannot exceed {#limit}.',
-        'any.required': 'Rating is required.',
+        'number.base': 'Đánh giá phải là một số.',
+        'number.integer': 'Đánh giá phải là số nguyên.',
+        'number.min': 'Đánh giá phải lớn hơn hoặc bằng {#limit}.',
+        'number.max': 'Đánh giá không được vượt quá {#limit}.',
+        'any.required': 'Đánh giá là trường bắt buộc.',
       }),
 
       comment: Joi.string().max(1000).allow('', null).trim().strict().messages({
-        'string.max': 'Review comment cannot exceed {#limit} characters.',
+        'string.base': 'Nội dung đánh giá phải là một chuỗi văn bản.',
+        'string.max': 'Nội dung đánh giá không được vượt quá {#limit} ký tự.',
       }),
     });
 
@@ -35,10 +36,22 @@ const createReviewValidation = async (req, res, next) => {
 const updateReviewValidation = async (req, res, next) => {
   try {
     const schema = Joi.object({
-      rating: Joi.number().integer().min(1).max(5),
+      rating: Joi.number().integer().min(1).max(5).messages({
+        'number.base': 'Đánh giá phải là một số.',
+        'number.integer': 'Đánh giá phải là số nguyên.',
+        'number.min': 'Đánh giá phải lớn hơn hoặc bằng {#limit}.',
+        'number.max': 'Đánh giá không được vượt quá {#limit}.',
+      }),
 
-      comment: Joi.string().max(1000).allow('', null).trim().strict(),
-    }).min(1);
+      comment: Joi.string().max(1000).allow('', null).trim().strict().messages({
+        'string.base': 'Nội dung đánh giá phải là một chuỗi văn bản.',
+        'string.max': 'Nội dung đánh giá không được vượt quá {#limit} ký tự.',
+      }),
+    })
+      .min(1)
+      .messages({
+        'object.min': 'Vui lòng cung cấp ít nhất một thông tin cần cập nhật.',
+      });
 
     await schema.validateAsync(req.body, { abortEarly: false });
     next();

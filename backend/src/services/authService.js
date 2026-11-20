@@ -6,6 +6,7 @@ import ApiError from '../utils/ApiError.js';
 import redis from '../config/redis.js';
 import env from '../config/environment.js';
 import mailer from '../utils/mailer.js';
+import { OAuth2Client } from 'google-auth-library';
 
 const loginService = async (email, password) => {
   try {
@@ -163,6 +164,60 @@ const authUserService = async (id) => {
   }
 };
 
+const oAuthGoogleService = async (token = '') => {
+  try {
+    const client = new OAuth2Client(env.GOOGLE_CLIENT_ID);
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    const email = payload.email;
+    const name = payload.name;
+    const avatar = payload.picture;
+    const googleId = payload.sub;
+
+    let user = await userModel.findOne({ email });
+
+    if (user && user.provider !== 'google') {
+      throw new ApiError(400, 'Tài khoản đã tồn tại');
+    }
+
+    if (!user) {
+      user = await userModel.create({
+        userName: name,
+        email,
+        avatar,
+        googleId,
+        provider: 'google',
+      });
+    }
+    const accessToken = encodedJWT(user, 'access_token');
+    const refreshToken = encodedJWT(user, 'refresh_token');
+
+    await redis.set(`refresh:${user._id}`, refreshToken, 'EX', env.REDIS_REFRESH_EXPIRES_IN);
+
+    const res = {
+      accessToken,
+      refreshToken,
+      user: {
+        _id: user._id,
+        userName: user.userName,
+        email: user.email,
+        avatar: user.avatar,
+        isOnline: user.isOnline,
+        role: user.role,
+        plan: user.plan,
+        phone: user.phone,
+      },
+    };
+
+    return res;
+  } catch (error) {
+    throw new ApiError(400, error || 'Đã xảy ra lỗi trong quá trình xác thực!');
+  }
+}
+
 const forgotPasswordService = async (email) => {
   try {
     if (!email) {
@@ -316,6 +371,7 @@ export {
   logoutService,
   refreshTokenService,
   authUserService,
+  oAuthGoogleService,
   changePasswordService,
   forgotPasswordService,
   resetPasswordService,

@@ -1,102 +1,56 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
-@import 'tailwindcss';
+@import "tailwindcss";
 
 :root {
-  --primary: #800000;
-  --primary-dark: #600000;
-  --background: #f8f3f0;
-  --background-light: #fffaf7;
-  --text-primary: #292524;
-  --text-secondary: #78716c;
-  --glass-bg: rgba(255, 255, 255, 0.4);
-  --glass-border: rgba(255, 255, 255, 0.55);
-  --glass-shadow: 0 4px 25px rgba(80, 30, 20, 0.05);
+  --rent-primary: #0045a8;
+  --rent-primary-hover: #0052cc;
+  --rent-primary-light: #eaf2ff;
+  --rent-secondary: #eff6ff;
+  --rent-accent: #ff5722;
+  --rent-danger: #e60012;
+  --rent-success: #10b981;
+  --rent-error: #dc2626;
+  --rent-warning: #f59e0b;
+  --rent-info: #0284c7;
+  --rent-white: #ffffff;
+  --rent-black: #000000;
+  --rent-background: #f7f8fa;
+  --rent-surface: #ffffff;
+  --rent-text: #172b4d;
+  --rent-text-secondary: #475569;
+  --rent-muted: #94a3b8;
+  --rent-border: #e2e8f0;
+}
+
+@theme {
+  --color-rent-primary: var(--rent-primary);
+  --color-rent-primary-hover: var(--rent-primary-hover);
+  --color-rent-primary-light: var(--rent-primary-light);
+  --color-rent-secondary: var(--rent-secondary);
+  --color-rent-accent: var(--rent-accent);
+  --color-rent-danger: var(--rent-danger);
+  --color-rent-success: var(--rent-success);
+  --color-rent-error: var(--rent-error);
+  --color-rent-warning: var(--rent-warning);
+  --color-rent-info: var(--rent-info);
+  --color-rent-white: var(--rent-white);
+  --color-rent-black: var(--rent-black);
+  --color-rent-background: var(--rent-background);
+  --color-rent-surface: var(--rent-surface);
+  --color-rent-text: var(--rent-text);
+  --color-rent-text-secondary: var(--rent-text-secondary);
+  --color-rent-muted: var(--rent-muted);
+  --color-rent-border: var(--rent-border);
 }
 
 @layer base {
-  * {
+  body {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
   }
 
   html {
     scroll-behavior: smooth;
   }
-
-  body {
-    margin: 0;
-    min-height: 100vh;
-    font-family: 'Be Vietnam Pro', sans-serif;
-    color: var(--text-primary);
-    background: transparent;
-  }
-
-  #root {
-    min-height: 100vh;
-    background: transparent;
-  }
-
-  button,
-  input,
-  textarea,
-  select {
-    font-family: inherit;
-  }
-
-  button {
-    cursor: pointer;
-  }
-}
-
-@layer components {
-  /* Header kính mờ */
-  .glass-header {
-    background: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.55);
-    box-shadow: none;
-  }
-
-  /* Kính mờ cơ bản */
-  .glass {
-    background: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.55);
-  }
-
-  /* Card kính mờ */
-  .glass-card {
-    background: rgba(255, 255, 255, 0.55);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.65);
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(80, 30, 20, 0.04);
-  }
-
-  /* Kính trắng nổi bật */
-  .glass-strong {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(28px);
-    -webkit-backdrop-filter: blur(28px);
-    border: 1px solid rgba(255, 255, 255, 0.7);
-    box-shadow: 0 8px 30px rgba(80, 30, 20, 0.06);
-  }
-}
-
-@keyframes modal-in {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.animate-modal-in {
-  animation: modal-in 0.2s ease-out;
 }

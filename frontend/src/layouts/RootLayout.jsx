@@ -1,8 +1,8 @@
 import { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
-import Header from '../components/layouts/Header';
-import Footer from '../components/layouts/Footer';
-import Loading from '../components/common/Loading';
+import Header from './Header';
+import Footer from './Footer';
+import Loading from '../components/Loading';
 
 const RootLayout = () => {
   return (

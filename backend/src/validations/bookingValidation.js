@@ -5,20 +5,20 @@ const createBookingValidation = async (req, res, next) => {
   try {
     const schema = Joi.object({
       roomId: Joi.string().hex().length(24).required().messages({
-        'string.hex': 'Room ID must be a valid ObjectId.',
-        'string.length': 'Room ID must contain 24 characters.',
-        'any.required': 'Room ID is required.',
+        'string.hex': 'ID phòng phải là một ObjectId hợp lệ.',
+        'string.length': 'ID phòng phải có đúng 24 ký tự.',
+        'any.required': 'ID phòng là trường bắt buộc.',
       }),
 
       bookingDate: Joi.date().iso().greater('now').required().messages({
-        'date.base': 'Booking date must be a valid date.',
-        'date.format': 'Booking date must use ISO date format.',
-        'date.greater': 'Booking date must be in the future.',
-        'any.required': 'Booking date is required.',
+        'date.base': 'Ngày đặt phòng phải là một ngày hợp lệ.',
+        'date.format': 'Ngày đặt phòng phải sử dụng định dạng ISO.',
+        'date.greater': 'Ngày đặt phòng phải nằm trong tương lai.',
+        'any.required': 'Ngày đặt phòng là trường bắt buộc.',
       }),
 
       note: Joi.string().max(500).allow('', null).trim().strict().messages({
-        'string.max': 'Booking note cannot exceed {#limit} characters.',
+        'string.max': 'Ghi chú đặt phòng không được vượt quá {#limit} ký tự.',
       }),
     });
 
@@ -38,7 +38,7 @@ const updateBookingValidation = async (req, res, next) => {
 
       note: Joi.string().max(500).allow('', null).trim().strict(),
 
-      status: Joi.string().valid('confirmed', 'cancelled', 'completed'),
+      status: Joi.string().valid('confirmed', 'rejected', 'cancelled', 'completed'),
     }).min(1);
 
     await schema.validateAsync(req.body, { abortEarly: false });
