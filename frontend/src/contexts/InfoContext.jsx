@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from 'react';
 import { authUserAPI } from '../apis/auth';
-import Loading from '../components/common/Loading';
+import Loading from '../components/Loading';
 import Cookies from 'js-cookie';
 
 const InfoContext = createContext();
