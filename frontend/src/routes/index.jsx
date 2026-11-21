@@ -7,6 +7,7 @@ import Forbidden from '../pages/Forbidden';
 import NotFound from '../pages/NotFound';
 import Login from '../pages/auth/Login';
 import Register from "../pages/auth/Register";
+import ForgotPassword from '../pages/auth/ForgotPassword';
 
 const router = createBrowserRouter([
   {
@@ -26,7 +27,11 @@ const router = createBrowserRouter([
           {
             path: '/register',
             element: <Register />
-          }
+          },
+          {
+            path: '/forgot-password',
+            element: <ForgotPassword />
+          },
         ],
       },
     ],

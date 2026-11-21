@@ -11,8 +11,12 @@ const registerValidation = Yup.object({
   password: Yup.string().required("Vui lòng nhập mật khẩu").min(8, "Mật khẩu tối thiểu 8 ký tự").max(50, "Mật khẩu tối đa 50 ký tự"),
   confirmPassword: Yup.string().required("Vui lòng xác nhận mật khẩu").oneOf([Yup.ref("password")], "Mật khẩu không khớp"),
 });
+const forgotPasswordValidation = Yup.object({
+  email: Yup.string().required("Vui lòng nhập email").email("Email không hợp lệ"),
+});
 
 export { 
   loginValidation, 
-  registerValidation 
+  registerValidation ,
+  forgotPasswordValidation,
 };

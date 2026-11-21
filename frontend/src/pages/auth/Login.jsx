@@ -16,7 +16,10 @@ const Login = () => {
   const { setInfo } = useInfo();
 
   const formik = useFormik({
-    initialValues: { email: "", password: "" },
+    initialValues: { 
+      email: "", 
+      password: "" 
+    },
     validationSchema: loginValidation,
     onSubmit: async (values) => {
       setIsLoading(true);
@@ -42,7 +45,10 @@ const Login = () => {
   const handleLoginSuccess = (data) => {
     Cookies.set("accessToken", data.accessToken);
     Cookies.set("refreshToken", data.refreshToken);
-    Cookies.set("user", JSON.stringify({ name: data.user.name, email: data.user.email }));
+    Cookies.set("user", JSON.stringify({ 
+      name: data.user.name,
+      email: data.user.email
+    }));
     setInfo(data.user);
     navigate(data.user.role === "admin" ? "/admin/dashboard" : "/room");
   };
@@ -108,7 +114,7 @@ const Login = () => {
           <span className="whitespace-nowrap text-xs text-rent-muted sm:text-sm">Hoặc tiếp tục với</span>
           <div className="h-px flex-1 bg-rent-border"></div>
         </div>
-        <div className="flex w-full justify-center overflow-hidden">
+        <div className="flex w-full justify-center">
           <GoogleLogin onSuccess={handleGoogleSuccess} onError={() => handleShowToast("Đăng nhập Google thất bại", "error")} theme="outline" shape="rectangular" size="large" text="signin_with" width="320" />
         </div>
         <div className="mt-5 text-center text-xs text-rent-text-secondary sm:mt-6 sm:text-sm">

@@ -13,7 +13,12 @@ const Register = () => {
   const { handleShowToast } = useToast();
 
   const formik = useFormik({
-    initialValues: { userName: "", email: "", password: "", confirmPassword: "" },
+    initialValues: {
+      userName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
     validationSchema: registerValidation,
     onSubmit: async (values) => {
       setIsLoading(true);
