@@ -5,21 +5,21 @@ import { decodedJWT } from "../utils/jwt.js";
 const guestMiddleware = (req, res, next) => {
 
   try {
-    const token = req.cookies.accessToken || req.headers.authorization?.split(' ')[1];
+    const token = req.cookies?.accessToken || req.headers.authorization?.split(' ')[1];
 
     if (token) {
       const decoded = decodedJWT(token, 'access_token');
       if (decoded) {
-        next(new ApiError(403, 'Bạn đã đăng nhập rồi.'));
+        return next(new ApiError(403, 'Bạn đã đăng nhập rồi.'));
       }
     }
 
     // Nếu không có token → cho đi tiếp
-    next();
+    return next();
 
-  } catch (err) {
+  } catch {
     // Nếu token không hợp lệ → vẫn cho đi tiếp vì là guest
-    next();
+    return next();
   }
 
 }
