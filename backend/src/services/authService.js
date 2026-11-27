@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import userModel from "../models/userModel.js";
 import { decodedJWT, encodedJWT } from "../utils/jwt.js";
 import ApiError from "../utils/ApiError.js";
@@ -91,9 +92,7 @@ const logoutService = async (userId) => {
     await redis.del(`refresh:${isUser._id}`);
     await userModel.updateOne({ _id: isUser._id }, { isOnline: false });
 
-    return {
-      message: 'logout successfully!'
-    }
+    return 'Logout successfully!';
 
   } catch (error) {
     throw new ApiError(400, error || 'Đã xảy ra lỗi trong quá trình đăng xuất!');
@@ -118,9 +117,11 @@ const refreshTokenService = async (refreshToken) => {
 
   } catch (error) {
     if (error.name === 'TokenExpiredError') {
-      const decoded = decodedJWT(refreshToken, 'refresh_token');
+      const decoded = jwt.decode(refreshToken);
 
-      await redis.del(`refresh:${decoded.id}`);
+      if (decoded?.id) {
+        await redis.del(`refresh:${decoded.id}`);
+      }
       throw new ApiError(400, 'Refresh token đã hết hạn');
     }
     throw new ApiError(400, error || 'Đã xảy ra lỗi trong quá trình!');
